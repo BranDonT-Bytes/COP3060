@@ -73,5 +73,47 @@
         <button type="submit">Submit</button>
       </form>
     </section>
-
+    
+      <!-- Table Section -->
+    <section aria-labelledby="table-heading">
+      <h2 id="table-heading">My Weekly Schedule</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Class/Activity</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Monday</td>
+            <td>Data Structures</td>
+            <td>10:00 AM - 11:30 AM</td>
+          </tr>
+          <tr>
+            <td>Wednesday</td>
+            <td>Operating Systems</td>
+            <td>1:00 PM - 2:30 PM</td>
+          </tr>
+          <tr>
+            <td>Friday</td>
+            <td>Senior Project Meeting</td>
+            <td>3:00 PM - 4:00 PM</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  <footer>
   </main>
+  
+
+    <small>&copy; <span id="year"></span> Brandon Brown</small>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
