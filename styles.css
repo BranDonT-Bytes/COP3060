@@ -16,3 +16,23 @@ h2 {
   margin-top: 30px;
   margin-bottom: 10px;
 }
+
+.highlight {
+  color: #008000;
+  font-style: italic;
+}
+
+#special {
+  background-color: #ffe4b5;
+  border: 2px dashed #ff4500;
+  padding: 10px;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+section {
+  margin-bottom: 30px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
