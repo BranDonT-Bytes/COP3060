@@ -22,3 +22,19 @@ form.addEventListener("submit", handleSubmit);
 document.getElementById("first-name").addEventListener("input", () => {
   console.log("First name is being typed...");
 });
+
+function handleSubmit(e) {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  if (validateEmail(email)) {
+    updateStatus("✅ Email is valid!", "green");
+    fetchData();
+  } else {
+    updateStatus("❌ Please enter a valid email address.", "red");
+  }
+}
+
+function validateEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
