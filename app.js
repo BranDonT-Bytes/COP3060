@@ -17,3 +17,8 @@ console.log({ sum, isNameMatch, eligibleToGraduate });
 const form = document.querySelector("form");
 const status = document.getElementById("status");
 const results = document.getElementById("results");
+
+form.addEventListener("submit", handleSubmit);
+document.getElementById("first-name").addEventListener("input", () => {
+  console.log("First name is being typed...");
+});
