@@ -43,3 +43,17 @@ function updateStatus(message, color = "black") {
   status.textContent = message;
   status.style.color = color;
 }
+
+async function fetchData() {
+  updateStatus("Loading...", "blue");
+  try {
+    const res = await fetch("https://jsonplaceholder.typicode.com/users");
+    if (!res.ok) throw new Error("Network error");
+    const data = await res.json();
+    renderUsers(data);
+    addSortControl(data);
+  } catch (err) {
+    updateStatus("Error loading data. Please try again.", "red");
+    console.error(err);
+  }
+}
