@@ -38,3 +38,8 @@ function validateEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
+
+function updateStatus(message, color = "black") {
+  status.textContent = message;
+  status.style.color = color;
+}
