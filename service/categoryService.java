@@ -1,77 +1,82 @@
-package com.cop_3060.exception;
+package com.cop_3060.service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.cop_3060.dto.*;
+import com.cop_3060.exception.ConflictException;
+import com.cop_3060.exception.NotFoundException;
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Centralized global error handler for the COP_3060 REST API.
- * Ensures all error responses share the same JSON shape:
- * {
- *   "timestamp": "...",
- *   "status": 404,
- *   "error": "Not Found",
- *   "message": "Resource 5 not found",
- *   "path": "/api/resources/5"
- * }
- */
-@RestControllerAdvice
-public class GlobalExceptionHandler {
+@Service
+public class CategoryService {
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(
-            NotFoundException ex, HttpServletRequest req) {
-        return error(404, "Not Found", ex.getMessage(), req.getRequestURI());
+    private final Map<Long, CategoryDto> store = new ConcurrentHashMap<>();
+    private final AtomicLong idGen = new AtomicLong();
+
+    private ResourceService resourceService; // circular dependency handled by setter
+
+    @PostConstruct
+    public void logStartup() {
+        System.out.println("CategoryService initialized with " + store.size() + " categories.");
     }
 
-    @ExceptionHandler(InvalidReferenceException.class)
-    public ResponseEntity<Map<String, Object>> handleInvalidReference(
-            InvalidReferenceException ex, HttpServletRequest req) {
-        return error(400, "Invalid Reference", ex.getMessage(), req.getRequestURI());
+    public void setResourceService(ResourceService resourceService) {
+        this.resourceService = resourceService;
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(
-            MethodArgumentNotValidException ex, HttpServletRequest req) {
-
-        String message = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(this::formatFieldError)
-                .collect(Collectors.joining(", "));
-
-        return error(400, "Validation Failed", message, req.getRequestURI());
+    public CategoryDto create(CreateCategoryRequest req) {
+        Long id = idGen.incrementAndGet();
+        CategoryDto dto = new CategoryDto(id, req.name(), req.description());
+        store.put(id, dto);
+        return dto;
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGeneric(
-            Exception ex, HttpServletRequest req) {
-        return error(500, "Internal Server Error", ex.getMessage(), req.getRequestURI());
+    public Map<String, Object> findAll(int page, int size, String sort) {
+        List<CategoryDto> list = new ArrayList<>(store.values());
+        list.sort(Comparator.comparing(CategoryDto::name, Comparator.nullsLast(String::compareToIgnoreCase)));
+
+        int from = page * size;
+        int to = Math.min(from + size, list.size());
+        List<CategoryDto> content = from >= list.size() ? List.of() : list.subList(from, to);
+
+        Map<String, Object> envelope = new LinkedHashMap<>();
+        envelope.put("content", content);
+        envelope.put("page", page);
+        envelope.put("size", size);
+        envelope.put("totalElements", list.size());
+        envelope.put("totalPages", (int) Math.ceil((double) list.size() / size));
+        return envelope;
     }
 
-    /** Helper to format consistent JSON error body */
-    private ResponseEntity<Map<String, Object>> error(
-            int status, String error, String message, String path) {
-
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", status);
-        body.put("error", error);
-        body.put("message", message);
-        body.put("path", path);
-
-        return ResponseEntity.status(status).body(body);
+    public CategoryDto findById(Long id) {
+        CategoryDto dto = store.get(id);
+        if (dto == null) throw new NotFoundException("Category %d not found".formatted(id));
+        return dto;
     }
 
-    private String formatFieldError(FieldError field) {
-        return field.getField() + ": " + field.getDefaultMessage();
+    public CategoryDto update(Long id, UpdateCategoryRequest req) {
+        if (!store.containsKey(id))
+            throw new NotFoundException("Category %d not found".formatted(id));
+        CategoryDto dto = new CategoryDto(id, req.name(), req.description());
+        store.put(id, dto);
+        return dto;
+    }
+
+    public void delete(Long id) {
+        if (!store.containsKey(id))
+            throw new NotFoundException("Category %d not found".formatted(id));
+
+        int count = resourceService != null ? resourceService.countByCategory(id) : 0;
+        if (count > 0)
+            throw new ConflictException("Category %d is in use by %d resources".formatted(id, count));
+
+        store.remove(id);
+    }
+
+    public boolean exists(Long id) {
+        return store.containsKey(id);
     }
 }
