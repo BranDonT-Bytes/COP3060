@@ -5,6 +5,7 @@ import com.cop_3060.dto.ResourceDto;
 import com.cop_3060.dto.UpdateResourceRequest;
 import com.cop_3060.service.ResourceService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class ResourceController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResourceDto> create(@Valid @RequestBody CreateResourceRequest request) {
         ResourceDto created = resourceService.create(request);
         URI location = URI.create("/api/resources/" + created.id());
@@ -46,11 +48,13 @@ public class ResourceController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResourceDto> update(@PathVariable Long id, @Valid @RequestBody UpdateResourceRequest request) {
         return ResponseEntity.ok(resourceService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         resourceService.delete(id);
         return ResponseEntity.noContent().build();

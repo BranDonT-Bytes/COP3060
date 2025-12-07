@@ -5,6 +5,7 @@ import com.cop_3060.dto.CreateCategoryRequest;
 import com.cop_3060.dto.UpdateCategoryRequest;
 import com.cop_3060.service.CategoryService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CategoryDto> create(@Valid @RequestBody CreateCategoryRequest request) {
         CategoryDto created = categoryService.create(request);
         URI location = URI.create("/api/categories/" + created.id());
@@ -44,11 +46,13 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CategoryDto> update(@PathVariable Long id, @Valid @RequestBody UpdateCategoryRequest request) {
         return ResponseEntity.ok(categoryService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();

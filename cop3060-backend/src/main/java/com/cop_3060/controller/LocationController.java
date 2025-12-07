@@ -5,6 +5,7 @@ import com.cop_3060.dto.CreateLocationRequest;
 import com.cop_3060.dto.UpdateLocationRequest;
 import com.cop_3060.service.LocationService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class LocationController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<LocationDto> create(@Valid @RequestBody CreateLocationRequest request) {
         LocationDto created = locationService.create(request);
         URI location = URI.create("/api/locations/" + created.id());
@@ -44,11 +46,13 @@ public class LocationController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<LocationDto> update(@PathVariable Long id, @Valid @RequestBody UpdateLocationRequest request) {
         return ResponseEntity.ok(locationService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         locationService.delete(id);
         return ResponseEntity.noContent().build();
