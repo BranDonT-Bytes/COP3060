@@ -1,3 +1,40 @@
+# COP3060
+
+A sample full-stack prototype combining React and Spring Boot.
+
+Quick start (one-step build & run)
+---------------------------------
+
+If you're on Windows and have PowerShell, Java, Maven and Node installed on your PATH you can run the included convenience script from the repository root which will:
+
+- build the React frontend
+- copy the frontend `build/` into the Spring Boot `src/main/resources/static`
+- build the backend jar
+- stop any process listening on port 8080 and start the backend jar
+
+Run:
+
+```powershell
+.\start-all.ps1
+```
+
+This will make the UI available at http://localhost:8080/ and the API endpoints at http://localhost:8080/api/.
+
+Notes:
+- For development with hot reload keep using `npm start` inside `campus-resource-frontend` and `mvn spring-boot:run` in the backend folder.
+- To enable real external weather data set `external.openweather.key` in `cop3060-backend/src/main/resources/application.properties`.
+
+Development (hot-reload)
+------------------------
+
+You can start frontend and backend together (hot reload) from the repository root. This uses `concurrently` to run both processes in one terminal:
+
+```powershell
+npm install
+npm run start-dev
+```
+
+This launches the React dev server (port 3000) and the Spring Boot backend (`mvn spring-boot:run`) in parallel.
 # Campus Resource Manager - Full Stack Application
 
 A complete React + Spring Boot application for managing campus resources, locations, and categories with a persistent MySQL database.

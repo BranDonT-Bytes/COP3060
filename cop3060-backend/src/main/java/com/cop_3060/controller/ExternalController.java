@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/external")
@@ -23,7 +24,8 @@ public class ExternalController {
         if (fetched.isPresent()) {
             return ResponseEntity.ok().body(fetched.get());
         } else {
-            return ResponseEntity.status(503).body("External API key not configured or failed to fetch data");
+            // consistent JSON shape for errors
+            return ResponseEntity.status(503).body(Map.of("error", "External API key not configured or failed to fetch data"));
         }
     }
 

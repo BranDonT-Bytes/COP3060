@@ -1,0 +1,12 @@
+{
+  "name": "cop3060-root",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start-all": "powershell -ExecutionPolicy Bypass -File start-all.ps1",
+    "start-dev": "concurrently \"npm start --prefix campus-resource-frontend\" \"mvn -f cop3060-backend spring-boot:run\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

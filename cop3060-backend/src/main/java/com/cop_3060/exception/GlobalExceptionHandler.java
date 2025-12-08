@@ -6,6 +6,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -62,6 +63,12 @@ public class GlobalExceptionHandler {
             Exception ex, HttpServletRequest req) {
         ex.printStackTrace();
         return error(500, "Internal Server Error", ex.getMessage(), req.getRequestURI());
+    }
+
+    @ExceptionHandler(HttpClientErrorException.TooManyRequests.class)
+    public ResponseEntity<Map<String, Object>> handleTooManyRequests(
+            HttpClientErrorException.TooManyRequests ex, HttpServletRequest req) {
+        return error(429, "Too Many Requests", "External API rate limit reached", req.getRequestURI());
     }
 
     /** Helper to format consistent JSON error body */
