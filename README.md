@@ -389,27 +389,16 @@ CREATE DATABASE campus_db;
 ```
 
 ---
+## Testing
+Frontend Testing
+COP3060-main\campus-resource-frontend>
+Terminal:  npm test -- --watchAll=false
+
+Backend Testing
+COP3060-main\cop3060-backend>
+Terminal:  mvn test
 
 ## 📝 AI Usage Log
-
-**Assistant: GitHub Copilot**
-
-**Summary of Work:**
-1. **Backend Setup**: Created Maven `pom.xml` with Spring Boot 3.2, Spring Data JPA, and MySQL dependencies
-2. **Application Scaffolding**: Generated Spring Boot `Application.java` with CORS configuration for local development
-3. **Entity Layer**: Created JPA entities (`Category`, `Location`, `Resource`) with proper relationships and validation
-4. **Repository Layer**: Built `JpaRepository` interfaces with custom query methods for filtering and pagination
-5. **Service Layer**: Implemented business logic with exception handling, DTO conversions, and database transactions
-6. **Controller Layer**: Created REST controllers with full CRUD endpoints and proper HTTP status codes
-7. **Database Config**: Set up `application.properties` for MySQL connection with auto table creation
-8. **Frontend Setup**: Added React Router, Axios, and Lucide icons; created responsive pages
-9. **Pages Implementation**:
-   - Home/Dashboard: Shows statistics and quick links
-   - Data Display: Tabbed interface for viewing categories, locations, and resources with pagination
-   - Form Page: Multi-form component for creating categories, locations, and resources
-10. **API Integration**: Built Axios client utility with CRUD methods for all three entities
-11. **Styling**: Created consistent, responsive CSS with mobile-first design approach
-12. **Documentation**: Wrote comprehensive README with architecture, endpoints, setup, and troubleshooting
 
 **Technologies Used:**
 - Backend: Spring Boot 3.2, Spring Data JPA, MySQL 8, Jakarta Validation, Maven
