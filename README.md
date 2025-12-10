@@ -1,4 +1,8 @@
 # COP3060
+Team Roles:
+
+BranDon - Backend and Testing
+Cameron - Frontend and Documentation
 
 A sample full-stack prototype combining React and Spring Boot.
 
@@ -397,6 +401,28 @@ Terminal:  npm test -- --watchAll=false
 Backend Testing
 COP3060-main\cop3060-backend>
 Terminal:  mvn test
+
+
+Test Summary
+Frontend (Jest):
+
+✅ Test Suites: 4 passed
+✅ Tests: 30 passed (1 new test added to App.test.js)
+✅ Zero failures
+Time: 2.26s
+Test breakdown:
+
+App.test.js: 1 test ✅
+Home.test.js: 7 tests ✅
+Auth.test.js: 10 tests ✅
+DataDisplay.test.js: 12 tests ✅
+Backend (JUnit - from previous runs):
+
+✅ 11 tests passing (CategoryServiceTest, ResourceServiceTest, AuthControllerTest)
+Combined:
+
+✅ 41/41 tests PASSING (30 Jest + 11 JUnit)
+✅ 100% success rate
 
 ## 📝 AI Usage Log
 
